@@ -1,8 +1,6 @@
 package Strings;
 
 
-import com.sun.xml.internal.ws.util.StringUtils;
-
 public class Сharacters {
     public static void main(String[] args) {
         int numberStrings = 17;

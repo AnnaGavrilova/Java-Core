@@ -2,7 +2,7 @@ package Marathon.Obstacle;
 
 import Marathon.Competitors.Competitor;
 
-public class Water extends Obstacle{
+public class Water extends Obstacle {
     int distance;
 
     public Water(int distance) {

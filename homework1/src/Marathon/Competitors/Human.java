@@ -1,6 +1,5 @@
 package Marathon.Competitors;
 
-import Marathon.Competitors.Competitor;
 
 public class Human implements Competitor {
 

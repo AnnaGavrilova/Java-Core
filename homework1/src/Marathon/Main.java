@@ -1,9 +1,6 @@
 package Marathon;
 
-import Marathon.Competitors.Cat;
-import Marathon.Competitors.Competitor;
-import Marathon.Competitors.Dog;
-import Marathon.Competitors.Human;
+
 import Marathon.Obstacle.*;
 
 public class Main {
