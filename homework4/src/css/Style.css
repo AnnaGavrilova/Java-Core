@@ -1,0 +1,35 @@
+#btn{
+ -fx-text-fill: derive( blue , 50% );
+ -fx-border-color: rgba(255, 255, 255, .80);
+ -fx-border-radius: 8;
+ -fx-padding: 6 6 6 6;
+ -fx-font: bold italic 7pt "LucidaBrightDemiBold";
+}
+
+#btn: hover {
+    -fx-text-fill: red;
+}
+
+#textField{
+ -fx-background-color: #afeeee;
+ -fx-text-fill: #0000cd;
+}
+
+#date{
+ -fx-background-color: #afeeee;
+ -fx-text-fill: #0000cd;
+}
+
+#textArea{
+-fx-background-color:  #e0ffff;
+-fx-background-image: url("../images/stars.png");
+-fx-text-fill: #0000cd;
+-fx-font: 10pt "LucidaBrightDemiBold";
+}
+#textArea.viewport {
+  -fx-background-color: transparent;
+}
+
+#textArea.content {
+    -fx-background-color: transparent;
+}
