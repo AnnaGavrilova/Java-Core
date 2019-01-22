@@ -1,7 +1,9 @@
 package NetworkChat.NetClient;
 
-import ConsoleApplication.Client.Client;
+
+import NetworkChat.NetServer.AuthService;
 import NetworkChat.NetServer.ServerTest;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -13,6 +15,7 @@ public class ClientHandler {
     private DataOutputStream out;
     private DataInputStream in;
     private ServerTest server;
+    private String nick;
 
     public ClientHandler(ServerTest server, Socket socket) {
         try {
@@ -20,6 +23,8 @@ public class ClientHandler {
             this.server = server;
             this.in = new DataInputStream(socket.getInputStream());
             this.out = new DataOutputStream(socket.getOutputStream());
+            this.nick = "";
+
 
             new Thread(new Runnable() {
                 @Override
@@ -27,11 +32,40 @@ public class ClientHandler {
                     try {
                         while (true) {
                             String str = in.readUTF();
-                            if(str.equals("/end")) {
-                                out.writeUTF("/serverClosed");
-                                break;
+
+                            if (str.startsWith("/auth")) {
+                                String[] tokens = str.split(" ");
+                                String newNick = AuthService.getNickLoginAndPass(tokens[1], tokens[2]);
+                                if (newNick != null) {
+                                    if (!server.isUserThere(newNick)) {
+                                        sendMsg("/authok");
+                                        ClientHandler.this.nick = newNick;
+                                        server.subscribe(ClientHandler.this);
+                                        break;
+                                    } else {
+                                        sendMsg("Пользователь " + newNick + " уже авторизован.");
+                                        break;
+                                    }
+                                } else {
+                                    sendMsg("Неверный логин/пароль!");
+                                }
                             }
-                         server.broadcastMsg(str);
+                        }
+
+                        while (true) {
+                            String str = in.readUTF();
+                            String[] mass = str.split(" ");
+                            switch (mass[0]) {
+                                case "/end":
+                                    out.writeUTF("/serverClosed");
+                                    break;
+                                case "/w":
+                                    server.privatMsg(str, mass[1], ClientHandler.this.nick);
+                                    break;
+                                default:
+                                    str = ClientHandler.this.nick + ": " + str;
+                                    server.broadcastMsg(str);
+                            }
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -51,6 +85,7 @@ public class ClientHandler {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+                        server.unsubscribe(ClientHandler.this);
                     }
 
                 }
@@ -68,8 +103,7 @@ public class ClientHandler {
         }
     }
 
-    public void removeElement(ClientHandler clientHandler){
-        server.removeClient(clientHandler);
+    public String getNick() {
+        return ClientHandler.this.nick;
     }
 }
-
