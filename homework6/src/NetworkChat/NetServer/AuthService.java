@@ -32,6 +32,23 @@ public class AuthService {
         return null;
     }
 
+    public static String[] getBlacklist(String nick) {
+        String sql = String.format("SELECT blacklist FROM users\n" +
+                "WHERE nickname = '%s'", nick);
+        try {
+            ResultSet rs = stmt.executeQuery(sql);
+
+            if (rs.next()) {
+                String text = rs.getString(1);
+                String[] list = text.split(" ");
+                return list;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static void disconnect() {
         try {
             connection.close();
